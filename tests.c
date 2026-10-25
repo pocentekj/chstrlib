@@ -79,10 +79,36 @@ START_TEST(test_parse_int)
 }
 END_TEST
 
+START_TEST(test_string_from_file)
+{
+    const string test_str = "平沢 唯（ひらさわ ゆい）\n田井中 律（たいなか りつ）\n秋山 澪（あきやま みお）\n琴吹 紬（ことぶき つむぎ）\n中野 梓（なかの あずさ）\n";
+    string contents = ch_string_from_file("../testfile.txt", NULL);
+    ck_assert(contents != NULL);
+    ck_assert_str_eq(contents, test_str);
+    ch_free_string(&contents);
+    contents = ch_string_from_file("does-not-exist.txt", NULL);
+    ck_assert(contents == NULL);
+    ch_free_string(&contents);
+}
+END_TEST
+
+START_TEST(test_read_lines)
+{
+    string_array *lines = ch_string_array_new();
+    bool ok = ch_read_lines("../testfile.txt", lines);
+
+    ck_assert(ok);
+    ck_assert(ch_string_array_len(lines) == 5);
+    ck_assert_str_eq(ch_string_array_at(lines, 0), "平沢 唯（ひらさわ ゆい）");
+
+    ch_string_array_destroy(&lines);
+}
+END_TEST
+
 // clang-format on
 
 Suite *dysk_c_suite(void) {
-    Suite *s = suite_create("chstring");
+    Suite *s = suite_create("chstr");
     TCase *tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_starts_with);
@@ -90,6 +116,8 @@ Suite *dysk_c_suite(void) {
     tcase_add_test(tc_core, test_string_truncate);
     tcase_add_test(tc_core, test_parse_int);
     tcase_add_test(tc_core, test_parse_double);
+    tcase_add_test(tc_core, test_string_from_file);
+    tcase_add_test(tc_core, test_read_lines);
 
     suite_add_tcase(s, tc_core);
 

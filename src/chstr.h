@@ -21,6 +21,9 @@ static inline void ch_free_string(string *s) {
     *s = NULL;
 }
 
+/**
+ * Returns width as visible columns (i.e. graphemes).
+ */
 static inline size_t ch_string_width(const string s) {
     return u8_strwidth((const uint8_t *)s, "UTF-8");
 }
@@ -82,6 +85,11 @@ static inline string ch_string_array_at(const string_array *arr, size_t i) {
  */
 bool ch_read_lines(string path, string_array *out);
 
+/**
+ * A set of functions to parse numbers from strings. All of them returns `true`
+ * on successful conversion and `false` on error, and store output in `dest` of
+ * appropriate type.
+ */
 bool ch_parse_double(const string s, double *dest);
 bool ch_parse_ll(const string s, long long *dest);
 bool ch_parse_int(const string s, int *dest);

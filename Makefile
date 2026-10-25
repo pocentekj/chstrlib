@@ -3,7 +3,7 @@ BUILDDIR := build
 
 .PHONY: all setup format dev check clean
 
-all: dev
+all: check
 
 $(BUILDDIR)/build.ninja:
 	CC="$(CC)" meson setup "$(BUILDDIR)"
@@ -14,7 +14,7 @@ setup:
 format:
 	find . -type f \( -name '*.c' -o -name '*.h' \) -print0 | xargs -0 clang-format -i
 
-dev: check
+dev: $(BUILDDIR)/build.ninja
 	meson compile -C "$(BUILDDIR)"
 
 check: $(BUILDDIR)/build.ninja
