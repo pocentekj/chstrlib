@@ -5,6 +5,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -128,6 +129,56 @@ bool read_lines(string path, string_array *out) {
 
         kv_push(string, out->data, tmp);
     }
+
+    return true;
+}
+
+bool ch_parse_double(const string s, double *dest) {
+    if (!s || !dest) return false;
+
+    errno = 0;
+
+    char *endptr = NULL;
+    double val = strtod(s, &endptr);
+
+    if (endptr == s || *endptr != '\0' || errno == ERANGE) {
+        return false;
+    }
+
+    *dest = val;
+
+    return true;
+}
+
+bool ch_parse_ll(const string s, long long *dest) {
+    if (!s || !dest) return false;
+
+    errno = 0;
+
+    char *endptr = NULL;
+    long long val = strtoll(s, &endptr, 10);
+
+    if (errno == ERANGE) return false;
+
+    if (endptr == s || *endptr != '\0') return false;
+
+    *dest = val;
+
+    return true;
+}
+
+bool ch_parse_int(const string s, int *dest) {
+    if (!s || !dest) return false;
+
+    long long val = 0;
+    if (!ch_parse_ll(s, &val)) return false;
+
+    if (val < INT_MIN || val > INT_MAX) {
+        errno = ERANGE;
+        return false;
+    }
+
+    *dest = (int)val;
 
     return true;
 }

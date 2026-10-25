@@ -34,6 +34,7 @@ START_TEST(test_string_truncate)
     test_str = strdup("Hello, World!");
     truncated = string_truncate(test_str, 128);
     ck_assert(!truncated);
+    ck_assert_str_eq(test_str, "Hello, World!");
     free_string(&test_str);
 
     test_str = strdup("なかの あずさ");
@@ -41,6 +42,40 @@ START_TEST(test_string_truncate)
     ck_assert(truncated);
     ck_assert_str_eq(test_str, "なか");
     free_string(&test_str);
+}
+END_TEST
+
+START_TEST(test_parse_double)
+{
+    double val = 0.0;
+    bool ok = false;
+
+    ok = ch_parse_double("0.025", &val);
+    ck_assert(ok);
+    ck_assert_double_eq(val, 0.025);
+
+    ok = ch_parse_double("invalid", &val);
+    ck_assert(!ok);
+}
+END_TEST
+
+START_TEST(test_parse_int)
+{
+    int val = 0;
+    bool ok = false;
+
+    ok = ch_parse_int("42", &val);
+    ck_assert(ok);
+    ck_assert_int_eq(val, 42);
+
+    ok = ch_parse_int("invalid", &val);
+    ck_assert(!ok);
+
+    ok = ch_parse_int("10m", &val);
+    ck_assert(!ok);
+
+    ok = ch_parse_int("0.025", &val);
+    ck_assert(!ok);
 }
 END_TEST
 
@@ -53,6 +88,8 @@ Suite *dysk_c_suite(void) {
     tcase_add_test(tc_core, test_starts_with);
     tcase_add_test(tc_core, test_string_width);
     tcase_add_test(tc_core, test_string_truncate);
+    tcase_add_test(tc_core, test_parse_int);
+    tcase_add_test(tc_core, test_parse_double);
 
     suite_add_tcase(s, tc_core);
 

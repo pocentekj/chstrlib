@@ -81,3 +81,7 @@ static inline string string_array_at(const string_array *arr, size_t i) {
  * functions, such as `fopen`.
  */
 bool read_lines(string path, string_array *out);
+
+bool ch_parse_double(const string s, double *dest);
+bool ch_parse_ll(const string s, long long *dest);
+bool ch_parse_int(const string s, int *dest);
