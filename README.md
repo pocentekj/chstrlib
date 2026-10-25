@@ -1,4 +1,4 @@
-# chstringlib
+# chstrlib
 
 A collection of useful tools to work with strings in C (Linux).
 

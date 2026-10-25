@@ -12,13 +12,47 @@ START_TEST(test_starts_with)
 }
 END_TEST
 
+START_TEST(test_string_width)
+{
+    ck_assert(string_width("hello") == 5);
+    ck_assert(string_width("なかの あずさ") == 13);
+    ck_assert(string_width("Zażółć gęślą żółć") == 17);
+}
+END_TEST
+
+START_TEST(test_string_truncate)
+{
+    string test_str = NULL;
+    bool truncated = false;
+
+    test_str = strdup("Hello, World!");
+    truncated = string_truncate(test_str, 5);
+    ck_assert(truncated);
+    ck_assert_str_eq(test_str, "Hello");
+    free_string(&test_str);
+
+    test_str = strdup("Hello, World!");
+    truncated = string_truncate(test_str, 128);
+    ck_assert(!truncated);
+    free_string(&test_str);
+
+    test_str = strdup("なかの あずさ");
+    truncated = string_truncate(test_str, 5);
+    ck_assert(truncated);
+    ck_assert_str_eq(test_str, "なか");
+    free_string(&test_str);
+}
+END_TEST
+
 // clang-format on
 
 Suite *dysk_c_suite(void) {
-    Suite *s = suite_create("Dysk C");
+    Suite *s = suite_create("chstring");
     TCase *tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_starts_with);
+    tcase_add_test(tc_core, test_string_width);
+    tcase_add_test(tc_core, test_string_truncate);
 
     suite_add_tcase(s, tc_core);
 
