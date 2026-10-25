@@ -1,22 +1,22 @@
 #include <check.h>
 #include <stdlib.h>
 
-#include "src/chstring.h"
+#include "src/chstr.h"
 
 // clang-format off
 
 START_TEST(test_starts_with)
 {
-    ck_assert(starts_with("/dev/mapper/root", "/dev"));
-    ck_assert(!starts_with("/dev/mapper/root", "dev"));
+    ck_assert(ch_starts_with("/dev/mapper/root", "/dev"));
+    ck_assert(!ch_starts_with("/dev/mapper/root", "dev"));
 }
 END_TEST
 
 START_TEST(test_string_width)
 {
-    ck_assert(string_width("hello") == 5);
-    ck_assert(string_width("なかの あずさ") == 13);
-    ck_assert(string_width("Zażółć gęślą żółć") == 17);
+    ck_assert(ch_string_width("hello") == 5);
+    ck_assert(ch_string_width("なかの あずさ") == 13);
+    ck_assert(ch_string_width("Zażółć gęślą żółć") == 17);
 }
 END_TEST
 
@@ -26,22 +26,22 @@ START_TEST(test_string_truncate)
     bool truncated = false;
 
     test_str = strdup("Hello, World!");
-    truncated = string_truncate(test_str, 5);
+    truncated = ch_string_truncate(test_str, 5);
     ck_assert(truncated);
     ck_assert_str_eq(test_str, "Hello");
-    free_string(&test_str);
+    ch_free_string(&test_str);
 
     test_str = strdup("Hello, World!");
-    truncated = string_truncate(test_str, 128);
+    truncated = ch_string_truncate(test_str, 128);
     ck_assert(!truncated);
     ck_assert_str_eq(test_str, "Hello, World!");
-    free_string(&test_str);
+    ch_free_string(&test_str);
 
     test_str = strdup("なかの あずさ");
-    truncated = string_truncate(test_str, 5);
+    truncated = ch_string_truncate(test_str, 5);
     ck_assert(truncated);
     ck_assert_str_eq(test_str, "なか");
-    free_string(&test_str);
+    ch_free_string(&test_str);
 }
 END_TEST
 

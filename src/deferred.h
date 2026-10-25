@@ -9,13 +9,13 @@
     #error "deferred() requires GCC or Clang"
 #endif
 
-static inline void close_fp(FILE **fp) {
+static inline void ch_close_fp(FILE **fp) {
     if (!fp || !*fp || *fp == stdin) return;
     fclose(*fp);
     *fp = NULL;
 }
 
-static inline void free_str(char **str) {
+static inline void ch_free_str(char **str) {
     if (!str || !*str) return;
     free(*str);
     *str = NULL;

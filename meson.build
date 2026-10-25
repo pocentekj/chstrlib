@@ -1,4 +1,4 @@
-project('chstring', 'c',
+project('libchstr', 'c',
   version: '0.1.0',
   default_options: ['c_std=gnu17', 'warning_level=3'],
 )
@@ -8,8 +8,8 @@ cc = meson.get_compiler('c')
 dep_unistring = cc.find_library('unistring')
 
 chstringlib = library(
-  'chstring',
-  'src/chstring.c',
+  'chstr',
+  'src/chstr.c',
   dependencies: dep_unistring,
   install: false,
 )

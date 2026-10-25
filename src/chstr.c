@@ -1,4 +1,4 @@
-#include "chstring.h"
+#include "chstr.h"
 
 #include "dbg.h"
 #include "deferred.h"
@@ -17,7 +17,7 @@
 
 #include <klib/kvec.h>
 
-bool starts_with(const string s, const string search) {
+bool ch_starts_with(const string s, const string search) {
     assert(s && search);
 
     size_t min_len = strlen(search);
@@ -26,7 +26,7 @@ bool starts_with(const string s, const string search) {
     return strncmp(s, search, min_len) == 0;
 }
 
-bool string_truncate(string s, size_t maxcols) {
+bool ch_string_truncate(string s, size_t maxcols) {
     assert(s);
 
     const uint8_t *txt = (const uint8_t *)s;
@@ -55,12 +55,12 @@ bool string_truncate(string s, size_t maxcols) {
     return true;
 }
 
-string string_from_file(const string path, size_t *max_size) {
+string ch_string_from_file(const string path, size_t *max_size) {
     assert(path);
 
     if (!path) return NULL;
 
-    deferred(close_fp) FILE *fp = fopen(path, "r");
+    deferred(ch_close_fp) FILE *fp = fopen(path, "r");
     check_ret(fp, NULL, "Failed to open '%s'", path);
 
     size_t cap = (max_size && *max_size < SIZE_MAX - 1) ? *max_size : SIZE_MAX - 1;
@@ -83,7 +83,7 @@ string string_from_file(const string path, size_t *max_size) {
     size_t nbytes = fread(contents, 1, (size_t)file_size, fp);
     if (nbytes != (size_t)file_size) {
         log_err("Failed to read from '%s'", path);
-        free_string(&contents);
+        ch_free_string(&contents);
         return NULL;
     }
 
@@ -92,14 +92,14 @@ string string_from_file(const string path, size_t *max_size) {
     return contents;
 }
 
-string_array *string_array_new(void) {
+string_array *ch_string_array_new(void) {
     string_array *arr = calloc(1, sizeof *arr);
     check_ret(arr, NULL, "Out of memory");
     kv_init(arr->data);
     return arr;
 }
 
-void string_array_destroy(string_array **arr) {
+void ch_string_array_destroy(string_array **arr) {
     if (!arr || !*arr) return;
 
     for (size_t i = 0; i < kv_size((*arr)->data); i++) {
@@ -111,13 +111,13 @@ void string_array_destroy(string_array **arr) {
     *arr = NULL;
 }
 
-bool read_lines(string path, string_array *out) {
+bool ch_read_lines(string path, string_array *out) {
     assert(path && out);
 
-    deferred(close_fp) FILE *fp = fopen(path, "r");
+    deferred(ch_close_fp) FILE *fp = fopen(path, "r");
     check_ret(fp, false, "Failed to open '%s'", path);
 
-    deferred(free_string) string line = NULL;
+    deferred(ch_free_string) string line = NULL;
     size_t max_size = 0;
     ssize_t nread = 0;
 
