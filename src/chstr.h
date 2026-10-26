@@ -22,7 +22,7 @@ static inline void ch_free_string(string *s) {
 }
 
 /**
- * Returns width as visible columns (i.e. graphemes).
+ * Returns width as visible columns.
  */
 static inline size_t ch_string_width(const string s) {
     return u8_strwidth((const uint8_t *)s, "UTF-8");
