@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unicase.h>
 #include <unistr.h>
 #include <unitypes.h>
 #include <uniwidth.h>
@@ -24,6 +25,26 @@ bool ch_starts_with(const string s, const string search) {
     if (strlen(s) < min_len) return false;
 
     return strncmp(s, search, min_len) == 0;
+}
+
+string ch_string_to_lowercase(const string s) {
+    const uint8_t *u8 = (const uint8_t *)s;
+
+    uint8_t *buf = NULL;
+    size_t out_len;
+
+    buf = u8_tolower(u8, u8_strlen(u8), NULL, NULL, NULL, &out_len);
+    check_mem(buf);
+
+    uint8_t *terminated = realloc(buf, out_len + 1);
+    check_mem(terminated);
+    terminated[out_len++] = '\0';
+
+    return (string)terminated;
+
+error:
+    if (buf) free(buf);
+    return NULL;
 }
 
 bool ch_string_truncate(string s, size_t maxcols) {

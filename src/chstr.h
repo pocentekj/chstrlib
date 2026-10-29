@@ -34,6 +34,12 @@ static inline bool ch_string_utf8_valid(const string s) {
 }
 
 /**
+ * Convert string to lowercase using UTF-8 rather than bytes.
+ * Returns NULL on failure.
+ */
+string ch_string_to_lowercase(const string s);
+
+/**
  * Truncate in place string `s` to visible columns `maxcols`.
  * Returns 'true' if string has been modified, `false` otherwise.
  */
