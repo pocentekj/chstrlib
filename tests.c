@@ -12,12 +12,16 @@ START_TEST(test_starts_with)
 }
 END_TEST
 
-START_TEST(test_to_lowercase)
+START_TEST(test_string_case)
 {
     string test_str = strdup("Zażółć gęślą żółć");
     string lower = ch_string_to_lowercase(test_str);
     ck_assert(lower);
     ck_assert_str_eq(lower, "zażółć gęślą żółć");
+    string upper = ch_string_to_uppercase(test_str);
+    ck_assert(upper);
+    ck_assert_str_eq(upper, "ZAŻÓŁĆ GĘŚLĄ ŻÓŁĆ");
+    ch_free_string(&upper);
     ch_free_string(&lower);
     ch_free_string(&test_str);
 }
@@ -123,7 +127,7 @@ Suite *dysk_c_suite(void) {
     TCase *tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_starts_with);
-    tcase_add_test(tc_core, test_to_lowercase);
+    tcase_add_test(tc_core, test_string_case);
     tcase_add_test(tc_core, test_string_width);
     tcase_add_test(tc_core, test_string_truncate);
     tcase_add_test(tc_core, test_parse_int);

@@ -27,25 +27,28 @@ bool ch_starts_with(const string s, const string search) {
     return strncmp(s, search, min_len) == 0;
 }
 
-string ch_string_to_lowercase(const string s) {
+typedef uint8_t *(*case_fn)(const uint8_t *, size_t, const char *, uninorm_t, uint8_t *, size_t *);
+
+static string ch_string_case(const string s, case_fn convert) {
     const uint8_t *u8 = (const uint8_t *)s;
+    size_t out_len = 0;
 
-    uint8_t *buf = NULL;
-    size_t out_len;
-
-    buf = u8_tolower(u8, u8_strlen(u8), NULL, NULL, NULL, &out_len);
-    check_mem(buf);
+    uint8_t *buf = convert(u8, u8_strlen(u8), NULL, NULL, NULL, &out_len);
+    if (buf == NULL) return NULL;
 
     uint8_t *terminated = realloc(buf, out_len + 1);
-    check_mem(terminated);
-    terminated[out_len++] = '\0';
+    if (terminated == NULL) {
+        free(buf);
+        return NULL;
+    }
 
+    terminated[out_len] = '\0';
     return (string)terminated;
-
-error:
-    if (buf) free(buf);
-    return NULL;
 }
+
+string ch_string_to_lowercase(const string s) { return ch_string_case(s, u8_tolower); }
+
+string ch_string_to_uppercase(const string s) { return ch_string_case(s, u8_toupper); }
 
 bool ch_string_truncate(string s, size_t maxcols) {
     assert(s);
