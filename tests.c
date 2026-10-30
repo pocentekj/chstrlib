@@ -35,6 +35,17 @@ START_TEST(test_string_width)
 }
 END_TEST
 
+START_TEST(test_string_center)
+{
+    string test_str = strdup("🐾 中野 梓");
+    string centered = NULL;
+    ck_assert(ch_string_center(test_str, 24, &centered) > 0);
+    ck_assert_str_eq(centered, "       🐾 中野 梓");
+    ch_free_string(&centered);
+    ch_free_string(&test_str);
+}
+END_TEST
+
 START_TEST(test_string_truncate)
 {
     string test_str = NULL;
@@ -129,6 +140,7 @@ Suite *dysk_c_suite(void) {
     tcase_add_test(tc_core, test_starts_with);
     tcase_add_test(tc_core, test_string_case);
     tcase_add_test(tc_core, test_string_width);
+    tcase_add_test(tc_core, test_string_center);
     tcase_add_test(tc_core, test_string_truncate);
     tcase_add_test(tc_core, test_parse_int);
     tcase_add_test(tc_core, test_parse_double);

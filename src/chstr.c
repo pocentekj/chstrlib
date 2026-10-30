@@ -50,6 +50,19 @@ string ch_string_to_lowercase(const string s) { return ch_string_case(s, u8_tolo
 
 string ch_string_to_uppercase(const string s) { return ch_string_case(s, u8_toupper); }
 
+int ch_string_center(const string s, size_t w, string *out) {
+    assert(s);
+    assert(out);
+
+    if (!s || !out || w > INT_MAX) return -1;
+    *out = NULL;
+    size_t sw = ch_string_width(s);
+    if (sw > w) return -1;
+    int p = (w - sw) / 2;
+
+    return asprintf(out, "%*s%s", p, "", s);
+}
+
 bool ch_string_truncate(string s, size_t maxcols) {
     assert(s);
 

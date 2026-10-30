@@ -43,6 +43,12 @@ string ch_string_to_lowercase(const string s);
 string ch_string_to_uppercase(const string s);
 
 /**
+ * Center string `s` according to max width `w` and store in `out`.
+ * `out` must be released by the caller after use.
+ */
+int ch_string_center(const string s, size_t w, string *out);
+
+/**
  * Truncate in place string `s` to visible columns `maxcols`.
  * Returns 'true' if string has been modified, `false` otherwise.
  */
